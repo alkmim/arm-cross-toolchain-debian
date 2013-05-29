@@ -1,0 +1,23 @@
+This needs better solution but for now this is enough.
+
+When we do full build of eglibc we do not have anything other then libgcc - so
+we need to kill SELinux support which is needed only for ncsd binary which we
+do not even use.
+
+---
+ sysdeps/linux.mk |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+Index: eglibc-2.17/debian/sysdeps/linux.mk
+===================================================================
+--- eglibc-2.17.orig/debian/sysdeps/linux.mk
++++ eglibc-2.17/debian/sysdeps/linux.mk
+@@ -14,7 +14,7 @@
+ ifeq ($(DEB_BUILD_PROFILE),bootstrap)
+   libc_extra_config_options = $(extra_config_options)
+ else
+-  libc_extra_config_options = --with-selinux $(extra_config_options)
++  libc_extra_config_options = $(extra_config_options)
+ endif
+ 
+ ifndef LINUX_SOURCE

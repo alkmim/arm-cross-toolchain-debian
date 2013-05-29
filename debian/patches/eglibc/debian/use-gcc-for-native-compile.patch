@@ -1,0 +1,17 @@
+---
+ Makerules |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+Index: eglibc-2.17/Makerules
+===================================================================
+--- eglibc-2.17.orig/Makerules	2013-05-27 16:10:21.065862249 +0000
++++ eglibc-2.17/Makerules	2013-05-27 16:13:00.789868321 +0000
+@@ -1222,7 +1222,7 @@
+ # Command to compile $< using the native libraries.
+ define native-compile
+ $(make-target-directory)
+-$(BUILD_CC) $($(basename $(<F))-CFLAGS) $(ALL_BUILD_CFLAGS) \
++gcc $($(basename $(<F))-CFLAGS) $(ALL_BUILD_CFLAGS) \
+ 	    $< $(OUTPUT_OPTION) $(BUILD_LDFLAGS)
+ endef
+ 

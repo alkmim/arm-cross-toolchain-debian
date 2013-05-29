@@ -1,0 +1,903 @@
+armel-cross-toolchain-base (1.101) raring; urgency=low
+
+  * Merge packaging from armhf-cross-toolchain-base 1.101:
+    - Bump eglibc to 2.17.
+
+ -- Colin Watson <cjwatson@ubuntu.com>  Fri, 08 Feb 2013 20:39:31 +0000
+
+armel-cross-toolchain-base (1.100) raring; urgency=low
+
+  * Merge packaging from armhf-cross-toolchain-base 1.100.
+
+ -- Matthias Klose <doko@ubuntu.com>  Sun, 20 Jan 2013 21:58:58 +0100
+
+armel-cross-toolchain-base (1.93) raring; urgency=low
+
+  * Stop building the libgcc packages from this source.
+  * Remove the the libc6 dependency on libgcc1.
+
+ -- Matthias Klose <doko@ubuntu.com>  Fri, 14 Dec 2012 10:11:41 +0100
+
+armel-cross-toolchain-base (1.92) raring; urgency=low
+
+  * Stop building the dummy packages.
+  * Include the stubs-<abi>.h header for the non-default architecture
+    in the libc6-dev-<arch>-cross package. Ugly hack, should really
+    be built within this source package.
+  * Drop obsolete patches for toolchain packages.
+  * Allow libelf-dev as a build dependency.
+
+ -- Matthias Klose <doko@ubuntu.com>  Thu, 06 Dec 2012 11:10:47 +0100
+
+armel-cross-toolchain-base (1.91) raring; urgency=low
+
+  * Make use of all toolchain improvements in raring.
+  * Use only gcc-4.7 for bootstrap.
+  * Bumped linux-source to 3.7
+    * added hacks to get linux-libc-dev_armel.deb built
+  * Bumped eglibc to 2.16
+    * Disabled SELinux support in eglibc - it is there for nscd which we do
+      not use.
+    * Added debconf(-2.0) to list of ignored deps for dpkg-cross.
+  * Bumped gcc-4.7 to 4.7.2-5
+    * install libgcc* packages after build-gcc2
+    * added workaround for LP: 1078736
+    * removed svn-doc-updates.diff from debian/rules.patch - it is broken
+  * Forced --disable-werror for cross binutils - aarch64 needs that - LP: 1079676
+
+ -- Marcin Juszkiewicz <marcin.juszkiewicz@linaro.org>  Mon, 19 Nov 2012 12:06:57 +0100
+
+armel-cross-toolchain-base (1.90) raring; urgency=low
+
+  * Bumped gcc-4.7 requirements to 4.7.2-5
+  * Added patch to fix cross build of gcc-4.7 4.7.2-5* - LP: 1070694
+  * Dropped merged patch to binutils
+
+ -- Marcin Juszkiewicz <marcin.juszkiewicz@linaro.org>  Wed, 24 Oct 2012 09:31:27 +0200
+
+armel-cross-toolchain-base (1.89) quantal; urgency=low
+
+  * Update to gcc 4.7.2
+
+ -- Marcin Juszkiewicz <marcin.juszkiewicz@linaro.org>  Fri, 21 Sep 2012 13:26:15 +0200
+
+armel-cross-toolchain-base (1.88) quantal; urgency=low
+
+  * Update to Linaro 12.09 gcc-4.7 release.
+  * binutils: apply patch for Debian bug #686183
+  * eglibc: dropped lucid patches
+  * gcc-4.7: drop merged fix-control.m4.patch
+
+ -- Marcin Juszkiewicz <marcin.juszkiewicz@linaro.org>  Mon, 17 Sep 2012 15:08:40 +0200
+
+armel-cross-toolchain-base (1.87) quantal; urgency=low
+
+  * Update to Linaro 12.07 gcc-4.7 release.
+  * Build linux-libc-dev without checking build dependencies - we satisfy all
+    we need to get it built.
+  * Added patch to gcc-4.7 to get debian/control fixed. Bug #680590
+
+ -- Marcin Juszkiewicz <marcin.juszkiewicz@linaro.org>  Wed, 18 Jul 2012 15:04:09 +0200
+
+armel-cross-toolchain-base (1.86) quantal; urgency=low
+
+  * Update to gcc 4.7.1
+  * drop merged patch from gcc-4.7
+  * added script to create non-multiarch copies of /usr/lib/TRIPLET/ for
+  	build-gcc3
+
+ -- Marcin Juszkiewicz <marcin.juszkiewicz@linaro.org>  Tue, 03 Jul 2012 13:42:54 +0200
+
+armel-cross-toolchain-base (1.85) quantal; urgency=low
+
+  * Create debian/stamps/ directory for linux package - LP: #1001172
+
+ -- Marcin Juszkiewicz <marcin.juszkiewicz@linaro.org>  Fri, 18 May 2012 11:54:05 +0200
+
+armel-cross-toolchain-base (1.84) quantal; urgency=low
+
+  * Rebuild with new dpkg-cross.
+
+ -- Marcin Juszkiewicz <marcin.juszkiewicz@linaro.org>  Thu, 17 May 2012 17:41:21 +0200
+
+armel-cross-toolchain-base (1.83) quantal; urgency=low
+
+  [ Wookey ]
+  * Debian switched to gcc-4.7 so we have to too.
+
+  [ Marcin Juszkiewicz ]
+  * GCC-4.7 related changes:
+    - added patch to drop --disable-multiarch for stage1
+    - refreshed enable-multiarch-directories.patch
+  * Dropped creation of /usr/TRIPLET/include/TRIPLET/asm directory under
+  	Debian.
+  * Moved cross binutils to separate source package as this will make
+    armhf-cross-toolchain-base (a-c-t-b) arch:all so less building. Also
+    allows to kill a-c-t-b when we will get cross-arch build dependencies.
+  * Build gcc-4.6/cross for building eglibc/cross and then gcc-4.7/cross to
+  	have libgcc1/cross. This part will be reverted when eglibc will be
+  	compiled with gcc-4.7 version.
+
+ -- Marcin Juszkiewicz <marcin.juszkiewicz@linaro.org>  Tue, 15 May 2012 15:39:42 +0200
+
+armel-cross-toolchain-base (1.82) precise; urgency=low
+
+  * Rebuild against latest toolchain source packages for consistency.
+
+ -- Adam Conrad <adconrad@ubuntu.com>  Mon, 16 Apr 2012 21:47:54 -0600
+
+armel-cross-toolchain-base (1.81) precise; urgency=low
+
+  * Fixed patch to binutils to make linker use multiarch directories - LP: #923779
+  * Allow to pass DISTRO variable to make it easier to check
+    Debian/Ubuntu build dependencies.
+
+ -- Marcin Juszkiewicz <marcin.juszkiewicz@linaro.org>  Tue, 10 Apr 2012 11:34:13 +0200
+
+armel-cross-toolchain-base (1.80) precise; urgency=low
+
+  [ Gustavo Alkmim]
+  * Updates to make package building under Debian.
+  * Copy multiarch headers to standard directory to fix build-eglibc stages.
+
+  [ Marcin Juszkiewicz ]
+  * Bumped gcc-4.6 requirement to 4.6.2-16 (due to patches merged).
+  * Refreshed Ubuntu and Debian patches.
+  * Debian only changes:
+    - Automated checking of Linux version (idea from Gustavo).
+    - Fixed 'build-linux' step for armhf target
+    - clean tmp/ directory after 'build-linux' step to not break other
+      packages.
+  * Added patch to binutils to make linker use multiarch directories - LP: #923779
+
+ -- Marcin Juszkiewicz <marcin.juszkiewicz@linaro.org>  Fri, 06 Apr 2012 10:38:19 +0200
+
+armel-cross-toolchain-base (1.79) precise; urgency=low
+
+  * Rebuild with gcc 4.6.3
+
+ -- Marcin Juszkiewicz <marcin.juszkiewicz@linaro.org>  Thu, 08 Mar 2012 16:30:09 +0100
+
+armel-cross-toolchain-base (1.78) precise; urgency=low
+
+  * Updated gcc-4.6 dependency to 4.6.2-14ubuntu2 to get fixed
+    debian/control.m4
+  * Updated Debian build
+  * Fixed multiarch directories patch.
+  * Updated kernel version to 3.2
+  * eglibc: refreshed patches to 2.15
+
+ -- Marcin Juszkiewicz <marcin.juszkiewicz@linaro.org>  Thu, 16 Feb 2012 18:16:08 +0100
+
+armel-cross-toolchain-base (1.77) precise; urgency=low
+
+  * Fixed paths for eglibc/stage1 - binaries moved from /lib to
+  	/usr/lib/triplet/
+  * Added build-gcc3 stamp to get libgcc1_s.so depending properly on libc.so.6
+    - closes LP: #805581
+  * Added hacky fix for debian/control generation - LP: #913734
+  * Use all cpu cores during build of gcc.
+  * PPA updates:
+    - take care of linux-source dependency too
+    - bumped versions
+  * Debian updates:
+    - rules: updated versions and handling of linux step under Debian
+    - control: added lsb-release to build dependencies
+    - eglibc: refreshed stages under Debian
+    - linux: apply patches under Debian
+  * removed code duplication for unpacking binutils
+  * gcc: dropped merged patches
+  * eglibc: refreshed patches
+  * eglibc: disabled dh_shlibdeps as build was unable to find libraries dependencies
+  * eglibc: dropped one patch as cross is using fortify now
+
+ -- Marcin Juszkiewicz <marcin.juszkiewicz@linaro.org>  Wed, 18 Jan 2012 08:03:12 +0100
+
+armel-cross-toolchain-base (1.76) precise; urgency=low
+
+  * Bumped gcc-4.6 dependency to 4.6.2-6 as it got lot of my changes merged:
+    - make cross compilers depend on gcc-cross-base package - closes LP: #862436
+    - enable hardening patches for cross builds - closes LP: #868924
+    - do not remove gcc cross in 'install-driver' step - closes LP: #877333
+    - fix usr_lib for hf/sf build - closes LP: #887111
+  * Added new patches for eglibc:
+    - disable fortify for cross builds
+    - set LD_LIBRARY_PATH for dh_shlibdeps (local, not mergeable)
+  * Dropped build time dependencies on gcc/g++ 4.5.
+  * Added "init" task for testing patches.
+  * Disabled "|true" in quilt so it is easier to catch broken patches.
+  * Disabled patching linux-source as there are no patches for it.
+  * Dropped binutils patches as they got merged.
+  * Added /usr/arm-linux-gnueabihf/lib/sf symlink to libc6-dev-armel-cross.
+
+ -- Marcin Juszkiewicz <marcin.juszkiewicz@linaro.org>  Mon, 12 Dec 2011 21:34:01 +0100
+
+armel-cross-toolchain-base (1.75) oneiric; urgency=low
+
+  * Refreshed eglibc patches which should fix not reproductible FTFBS - closes
+    LP: #864591
+
+ -- Marcin Juszkiewicz <marcin.juszkiewicz@linaro.org>  Mon, 03 Oct 2011 13:16:15 +0200
+
+armel-cross-toolchain-base (1.74) oneiric; urgency=low
+
+  * Created dummy libc6-arm(el|hf)-arm(hf|el)-cross packages.
+  * Added PKG_IGNORE_CURRENTLY_BUILDING=1 to each dpkg-deb -b call.
+
+ -- Marcin Juszkiewicz <marcin.juszkiewicz@linaro.org>  Thu, 29 Sep 2011 15:42:41 +0200
+
+armel-cross-toolchain-base (1.73) oneiric; urgency=low
+
+  * Documented changes done by repack_debs function.
+  * Created dummy libc6-dev-arm(el|hf)-arm(hf|el)-cross packages to make
+  	multilib cross compiler possible.
+  * libc6-dev-armhf-cross ships symlink to /usr/arm-linux-gnueabi/lib/hf for
+  	multilib cross compiler.
+  * Added dpkg to list of ignored dependencies while dpkg-crossing
+    packages - libc6-dbg has it in Pre-Depends.
+
+ -- Marcin Juszkiewicz <marcin.juszkiewicz@linaro.org>  Mon, 26 Sep 2011 20:44:54 +0200
+
+armel-cross-toolchain-base (1.72) oneiric; urgency=low
+
+  * Integrated changes from PPA builds:
+    - use fakeroot for eglibc builds
+    - fixed mangling of versions in debian/control
+    - added EXTRA_DEPS to get rid of gcc-4.5 dependency
+    - lower dpkg dependency to 1.15.5
+  * Bumped dependency on gcc-4.6 to 4.6.1-6 (patches got merged)
+  * Refreshed eglibc patches for PPA:
+    - new languages were added
+    - do not move headers for non-multiarch builds
+    - drop Multi-Arch: fields from debian/control for PPA builds
+  * Depend on unversioned 'linux-source' package - closes LP: #827026
+  * rewrote lintian overrides support for cross compilation files
+    - closes LP: #798991, #760421
+  * patched binutils to get rid of lintian warnings - closes LP: #760420
+  * made some functions quiet
+  * added "|true" to quilt invocations to make them work for empty series
+  * Debian support related changes:
+    - refreshed eglibc patches
+    - rewrote build-linux step - closes #611382
+
+ -- Marcin Juszkiewicz <marcin.juszkiewicz@linaro.org>  Fri, 26 Aug 2011 10:58:06 +0200
+
+armel-cross-toolchain-base (1.71) oneiric; urgency=low
+
+  * Require dpkg-cross 2.6.5 (build fails due to missing dependencies on
+    Locale/gettext.pm otherwise)
+
+ -- Marcin Juszkiewicz <marcin.juszkiewicz@linaro.org>  Thu, 28 Jul 2011 15:49:07 +0200
+
+armel-cross-toolchain-base (1.70) oneiric; urgency=low
+
+  * Rebuild to keep up with Linaro 2011.07 release.
+  * Use patches from LP: 816852 to disable multilib in gcc build
+    - we bootstrap compiler so we lack any libraries and want to build one
+      arch at time
+  * Hack eglibc to remove armhf multilib from armel build.
+  * Add build-arch and build-indep makefile targets to debian/rules
+  * Updated components versions for PPA builds
+
+ -- Marcin Juszkiewicz <marcin.juszkiewicz@linaro.org>  Thu, 28 Jul 2011 11:47:10 +0200
+
+armel-cross-toolchain-base (1.69) oneiric; urgency=low
+
+  * Rebuild to keep up with Linaro 2011.06 release.
+  * Updated components versions for PPA builds
+  * Fixed dir to gcc patches
+
+ -- Marcin Juszkiewicz <marcin.juszkiewicz@linaro.org>  Fri, 24 Jun 2011 08:53:43 +0200
+
+armel-cross-toolchain-base (1.68) oneiric; urgency=low
+
+  * Update to use linux-source-3.0 instead of linux-source-2.6.39 one.
+
+ -- Marcin Juszkiewicz <marcin.juszkiewicz@linaro.org>  Mon, 13 Jun 2011 15:09:20 +0200
+
+armel-cross-toolchain-base (1.67) oneiric; urgency=low
+
+  * Rebuild to keep up with gcc-4.6 version - LP: #794534
+
+ -- Marcin Juszkiewicz <marcin.juszkiewicz@linaro.org>  Wed, 08 Jun 2011 15:51:13 +0200
+
+armel-cross-toolchain-base (1.66) oneiric; urgency=low
+
+  * Added submitted-armhf-triplet patch from Debian eglibc svn r4648 to fix
+    armhf compilation.
+
+ -- Marcin Juszkiewicz <marcin.juszkiewicz@linaro.org>  Fri, 03 Jun 2011 17:36:09 +0200
+
+armel-cross-toolchain-base (1.65) oneiric; urgency=low
+
+  * rebuild due to version difference between gcc-4.6-armel-cross and
+    this one which ends in uninstallable packages
+
+ -- Marcin Juszkiewicz <marcin.juszkiewicz@linaro.org>  Thu, 02 Jun 2011 15:52:38 +0200
+
+armel-cross-toolchain-base (1.64) oneiric; urgency=low
+
+  * First release for Ubuntu 'oneiric' 11.10:
+  * synced versions with Debian
+    - gcc 4.6
+    - eglibc 2.13
+  * linux 2.6.39 used for Ubuntu
+  * added gcc-4.5 as it isrequired for eglibc (switch to 4.6 not before 2.14
+    release according to Matthias Klose)
+  * dropped merged patches from gcc and binutils
+  * renamed patches/gcc-4.5 to unversioned patches/gcc
+  * added lintian overrides for cross compilation files
+  * Debian changes:
+    * refreshed eglibc patches
+    * dropped eglibc packaging information and bumped dependency to 2.13-5
+      for it
+
+ -- Marcin Juszkiewicz <marcin.juszkiewicz@linaro.org>  Mon, 30 May 2011 14:20:39 +0200
+
+armel-cross-toolchain-base (1.63) natty; urgency=low
+
+  [Marcin Juszkiewicz]
+  * fix lintian errors:
+    - shlib-with-executable-bit - LP: #760420
+    - arch-independent-package-contains-binary-or-object - LP: #760421
+  * fix repack-debs-indep step
+  * generate md5sums for each mangled package
+
+  [Steve McIntyre]
+  * drop hardcoded 'armel' from rules - LP: #761613
+
+ -- Marcin Juszkiewicz <marcin.juszkiewicz@linaro.org>  Fri, 15 Apr 2011 13:29:09 +0200
+
+armel-cross-toolchain-base (1.62) natty; urgency=low
+
+  * Fixed build to work with co-installable (multiarched) linux-libc-dev
+    headers. LP: #750585.
+  * Added copyright, changelog files into eglibc and linux cross packages
+    LP: #755329
+  * Changed dependencies from -1 -> -1~ to make lintian more happy.
+  * Debian changes:
+    - switched to gcc 4.6 under Debian
+    - moved definition of GCC versions to distro parts
+    - gcc-4.6: disable libquadmath for stages - sent for review/merge
+    - fixed minimal version of binutils to Debian one
+    - moved to 2.6.38 kernel
+    - refreshed linux and eglibc patches
+    - updated copy of linux-2.6 packaging to 2.6.38-3
+  * add overrides for -cross packages to make lintian more happy - LP: #760421
+  * fix repack-debs-indep step
+  * generate md5sums for each mangled package
+
+ -- Marcin Juszkiewicz <marcin.juszkiewicz@linaro.org>  Thu, 14 Apr 2011 11:22:32 +0200
+
+armel-cross-toolchain-base (1.61build1) natty; urgency=low
+
+  * No-change rebuild against current gcc-4.5-source.
+
+ -- Steve Langasek <steve.langasek@ubuntu.com>  Tue, 12 Apr 2011 07:11:08 -0700
+
+armel-cross-toolchain-base (1.61) natty; urgency=low
+
+  * "Say good bye to update-alternatives" release
+  * switch to symlinks for default cross gcc version - LP: #676454
+    - this will require newer gcc-defaults-armel-cross release
+    - bumped gcc-4.5-source dependency to 4.5.2-8~
+  * added 'init' task into debian/rules to make testing does patches apply
+    easier
+  * added section for libc6-dev-armel-cross because dpkg-cross 2.6.0+ keeps
+    section instead of overwriting
+  * dropped all patches which were merged into binutils and gcc-4.5
+  * refreshed eglibc patches to apply - LP: #749180
+  * added patch to eglibc to revert 2.13-0ubuntu10 change:
+    "* Provide compatibility symlinks for .o files in /usr/lib. LP: #744908."
+    this is needed for native builds but not for current cross
+
+ -- Marcin Juszkiewicz <marcin.juszkiewicz@linaro.org>  Mon, 04 Apr 2011 11:57:12 +0200
+
+armel-cross-toolchain-base (1.60) natty; urgency=low
+
+  * multiarch related changes
+    - require dpkg-cross 2.6.3 to handle multiarch packages - LP: #736154 and
+    LP: #739151
+    - require dpkg 0.16.0 for working dpkg-shlibdeps
+  * gcc-4.5 patches:
+    - disabled build of plugin-dev
+  * merged Steve Langasek changes (1.59)
+    - Fix up build to work with current eglibc debian/rules.
+  * changes related to pkgsym ddebs:
+    - clean step removes a bit more - *.ddeb & debian/files
+    - rules: use wildcard instead of listing files to mangle
+    - create -dbgsym package and strip libraries - LP: #711523
+    - files from gcc/debian/gcc-4.5-*-base dir are used as we do not have
+      gcc-4.5-*-base package anymore
+  * Merged Debian/Ubuntu/Linaro backport PPA rules
+    - downgraded build-dependencies to Debian level (where possible)
+    - separate patches for eglibc/Debian and eglibc/Ubuntu
+    - fixed handling of eglibc and gcc documentation in Debian
+    - backported some patches from eglibc/Ubuntu to eglibc/Debian
+      - stages support
+      - PATCHED_SOURCES support
+    - backported some patches from linux/Ubuntu to linux/Debian
+      - stages support
+    - use separate 'series' files for patches/linux and patches/eglibc
+    - dropped eglibc/lucid-force-gcc-4.4.patch as it is integrated in eglibc backport
+    - switched to quilt for patching eglibc (.pc dir is removed after patching)
+    - PPA build can be enabled by touching debian/ppa file
+  * moved code which installs gcc into common function
+  * dropped binutils patch which was needed for 2.21 (bumped to 2.21.0.20110216)
+  * dropped code to regenerate debian/control - it was buggy and never finished
+  * added new rule to generate debian/control file (handles Debian and Ubuntu for
+    now)
+
+ -- Marcin Juszkiewicz <marcin.juszkiewicz@linaro.org>  Tue, 29 Mar 2011 11:13:35 +0200
+
+armel-cross-toolchain-base (1.59) natty; urgency=low
+
+  * Fix up build to work with current eglibc debian/rules.
+
+ -- Steve Langasek <steve.langasek@ubuntu.com>  Sat, 26 Feb 2011 18:10:27 -0800
+
+armel-cross-toolchain-base (1.58+build1) natty; urgency=low
+
+  * No-change rebuild against current gcc-4.5.
+
+ -- Steve Langasek <steve.langasek@ubuntu.com>  Sat, 26 Feb 2011 15:21:14 -0800
+
+armel-cross-toolchain-base (1.58) natty; urgency=low
+
+  * update to use 2.6.38 kernel
+
+ -- Marcin Juszkiewicz <marcin.juszkiewicz@linaro.org>  Mon, 31 Jan 2011 13:39:56 +0100
+
+armel-cross-toolchain-base (1.57) natty; urgency=low
+
+  * use PKG_IGNORE_CURRENTLY_BUILDING instead of NO_PKG_MANGLE to allow
+    to generate .ddebs
+  * control: remove alternatives dependencies - they are PPA backports only
+  * control: re-added Vcs-* entries
+  * merged changes from PPA backport:
+    - depend on dpkg-cross >= 2.5.8 to get rid of double Provides: lines
+      (lucid problem)
+    - binutils: (re-)apply patch from Ubuntu to fix FTFBS (needed only for
+      PPA, fails to apply in natty but we can ignore that)
+    - rules: use gcc 4.4 to build eglibc (lucid lacks gcc-4.5)
+    - rules: handle PPA versions of this package in DEB_VER_ACT variable
+    - rules: bumped hardcoded component versions to recent one
+
+ -- Marcin Juszkiewicz <marcin.juszkiewicz@linaro.org>  Wed, 26 Jan 2011 14:38:34 +0100
+
+armel-cross-toolchain-base (1.56) natty; urgency=low
+
+  * Rebuild with gcc 4.5.2
+
+ -- Marcin Juszkiewicz <marcin.juszkiewicz@linaro.org>  Tue, 21 Dec 2010 10:44:17 +0100
+
+armel-cross-toolchain-base (1.55) natty; urgency=low
+
+  * Updated build dependencies:
+    - binutils 2.21 as gold-cross.patch got merged - LP: #686530
+    - gcc-4.5 4.5.1-12 as armv7a optimizations patch got merged - LP: #684625
+
+ -- Marcin Juszkiewicz <marcin.juszkiewicz@linaro.org>  Tue, 14 Dec 2010 10:31:43 +0100
+
+armel-cross-toolchain-base (1.54) natty; urgency=low
+
+   * merged support to build for PPA backport
+     - PPA=true means build is for PPA
+       - other version of patch for eglibc will be used
+       - versioned binutils/eglibc/gcc-4.5 releases will be used
+       - set exact versions of binutils/eglibc/gcc
+       - linux-source is not covered by PPA variable because it has different
+         name for each release
+
+   * binutils: enable gold to match native build - LP: #686530
+   * gcc: use armv7a optimizations - LP: #684625
+   * gcc-4.5: do not use gold for stage1/2 builds
+   * updated build dependencies:
+     - g++-4.4 is required for binutils to build gold
+     - binutils/eglibc/gcc-4.5 deps can be provided by PPA backports
+     - lowered build dependencies to lucid level to make backports easier
+
+ -- Marcin Juszkiewicz <marcin.juszkiewicz@linaro.org>  Tue, 07 Dec 2010 15:07:42 +0100
+
+armel-cross-toolchain-base (1.53) natty; urgency=low
+
+  [ Michael Hope ]
+  * fixed build for non-standard PF.
+
+  [ Marcin Juszkiewicz ]
+  * added binutils-arm-linux-gnueabi to build-conficts as we need binutils
+    which know what sysroot is during build.
+  * added fakeroot dependency
+  * dropped g++-multilib dependency - closes LP: #637454
+  * updated to natty versions
+    - dropped binutils patch as it got merged in natty (bumped binutils
+      dependency)
+  * use gcc-4.4 to compile binutils and eglibc (update to gcc-4.5 is on
+    todolist)
+  * do not copy gcc patches anymore as this is symlink to debian/patches
+
+ -- Marcin Juszkiewicz <marcin.juszkiewicz@linaro.org>  Thu, 25 Nov 2010 13:28:34 +0100
+
+armel-cross-toolchain-base (1.52) maverick-proposed; urgency=low
+
+  * build binutils without sysroot support - closes LP: #598389
+
+ -- Marcin Juszkiewicz <marcin.juszkiewicz@linaro.org>  Wed, 06 Oct 2010 14:46:16 +0200
+
+armel-cross-toolchain-base (1.51) maverick; urgency=low
+
+  * debian/rules: add epoch for libgcc1-dbg version mangling - closes 
+    LP: #646729
+
+ -- Marcin Juszkiewicz <marcin.juszkiewicz@linaro.org>  Wed, 06 Oct 2010 14:45:04 +0200
+
+armel-cross-toolchain-base (1.50) maverick; urgency=low
+
+  * mangle linux-libc-dev version to have crossVER added 
+
+ -- Marcin Juszkiewicz <marcin.juszkiewicz@linaro.org>  Wed, 22 Sep 2010 08:48:30 +0200
+
+armel-cross-toolchain-base (1.49) maverick; urgency=low
+
+  * fix problem with translations archive
+
+ -- Marcin Juszkiewicz <marcin.juszkiewicz@linaro.org>  Tue, 21 Sep 2010 21:16:45 +0200
+
+armel-cross-toolchain-base (1.48) maverick; urgency=low
+
+  [ Marcin Juszkiewicz ]
+  * mangle versions to have crossVER added
+  * do not generate gcc-4.5-*-base package
+    * mangle libgcc1 to not need gcc-4.5-*-base and keep its documentation
+    * libgcc1 keeps changelog of this package
+  * use only generated debs for mangling debian/control debian/files
+    - closes LP: #640298
+  * adapt to recent change in linux-libc-dev version numbering
+
+  [ Steve Langasek ]
+  * make sure libgcc1-CROSS-dbg keeps a strict versioned dependency on
+    libgcc1-CROSS
+  * debian/rules: misc code deduplication in repack_debs
+
+ -- Steve Langasek <steve.langasek@ubuntu.com>  Mon, 20 Sep 2010 22:11:03 +0000
+
+armel-cross-toolchain-base (1.47) maverick; urgency=low
+
+  * This package is part of LP: #634494
+  * Fixed DEB_NAME_ACT so it will not fail with "duplicated ancestry".
+  * control: cleaned build dependencies (with help from Matthias Klose)
+  * build binutils without checking dependencies - dejagnu is not needed for cross build
+  * bump gcc-4.4/4.5 requirements, drop merged patches
+
+ -- Marcin Juszkiewicz <marcin.juszkiewicz@linaro.org>  Mon, 13 Sep 2010 16:35:56 +0200
+
+armel-cross-toolchain-base (1.46) maverick; urgency=low
+
+  * Making improvements to package to get it accepted into Ubuntu.
+    - added copyright informations
+    - source/format: set to 3.0 (native)
+    - added README.source with informations how package works
+    - fixed linux-source dependency
+
+  * debian/control changes:
+    - generated new one with all build dependencies cleaned
+    - added entries for generated packages
+    - added Vcs- fields
+    - removed regeneration of debian/control during build
+    - set Priority to extra
+    - set "Section: debug" for all -dbg packages
+  
+  * debian/rules:
+    - dropped version mangling which was needed in ppa
+    - dropped using architecture name from rules
+    - use quilt to apply patches for gcc (for eglibc it generated conflicts
+      during it's "debian/rules clean" step)
+    - use "tar -xf" and depend on tar 1.20+
+
+  * GCC changes:
+    - updated gcc debian/control.m4 patch to fix all priority and section fields
+    - all GCC patches are merged and will be present in next versions of
+      gcc-4.4/4.5
+
+ -- Marcin Juszkiewicz <marcin.juszkiewicz@linaro.org>  Fri, 10 Sep 2010 16:16:00 +0200
+
+armel-cross-toolchain-base (1.45) maverick; urgency=low
+
+  * first set of changes to get it accepted in archive
+
+ -- Marcin Juszkiewicz <marcin.juszkiewicz@linaro.org>  Thu, 09 Sep 2010 15:51:38 +0200
+
+armel-cross-toolchain-base (1.44) maverick; urgency=low
+
+  * switch version mangling to use '-ppa' in a-c-t-b and a-c-t
+
+ -- Marcin Juszkiewicz <marcin.juszkiewicz@linaro.org>  Wed, 08 Sep 2010 09:35:08 +0200
+
+armel-cross-toolchain-base (1.43) maverick; urgency=low
+
+  * mangle dependencies in packages
+
+ -- Marcin Juszkiewicz <marcin@juszkiewicz.com.pl>  Tue, 07 Sep 2010 15:49:06 +0200
+
+armel-cross-toolchain-base (1.42) maverick; urgency=low
+
+  * fix versions also inside of package
+  * joined step which mangle debian files
+
+ -- Marcin Juszkiewicz <marcin@juszkiewicz.com.pl>  Tue, 07 Sep 2010 13:55:39 +0200
+
+armel-cross-toolchain-base (1.41) maverick; urgency=low
+
+  * generate debian/files from mangled packages - dpkg-genchanges works
+    properly
+  * created some functions instead of duplication of code
+    * generation of debian/files
+    * generation of debian/control
+    * repacking debs
+
+ -- Marcin Juszkiewicz <marcin.juszkiewicz@linaro.org>  Tue, 07 Sep 2010 12:25:04 +0200
+
+armel-cross-toolchain-base (1.40) maverick; urgency=low
+
+  * working version of version mangling
+
+ -- Marcin Juszkiewicz <marcin.juszkiewicz@linaro.org>  Tue, 07 Sep 2010 10:40:29 +0200
+
+armel-cross-toolchain-base (1.39) maverick; urgency=low
+
+  * added mangling of versions to pass LP upload scripts
+
+ -- Marcin Juszkiewicz <marcin.juszkiewicz@linaro.org>  Mon, 06 Sep 2010 16:24:28 +0200
+
+armel-cross-toolchain-base (1.38) maverick; urgency=low
+
+  * apply fix for LP: 631474 (wrong name of gcc-4.5-plugin-dev package)
+  * drop not needed "-nc" switch from eglibc build
+
+ -- Marcin Juszkiewicz <marcin.juszkiewicz@linaro.org>  Mon, 06 Sep 2010 13:25:14 +0200
+
+armel-cross-toolchain-base (1.37) maverick; urgency=low
+
+  * there is no build-indep anymore
+  * do not rebuild eglibc - fix from Steve Langasek
+  * gcc patch got merged - drop it
+  * updated dependencies on gcc-4.5-source and eglibc-source
+
+ -- Marcin Juszkiewicz <marcin.juszkiewicz@linaro.org>  Mon, 06 Sep 2010 10:52:44 +0200
+
+armel-cross-toolchain-base (1.36) maverick; urgency=low
+
+  * fixed missing 'build-arch' target 
+
+ -- Marcin Juszkiewicz <marcin.juszkiewicz@linaro.org>  Fri, 03 Sep 2010 17:28:38 +0200
+
+armel-cross-toolchain-base (1.35) maverick; urgency=low
+
+  * eglibc no longer needs to be patched for stages support
+
+ -- Marcin Juszkiewicz <marcin.juszkiewicz@linaro.org>  Fri, 03 Sep 2010 16:51:26 +0200
+
+armel-cross-toolchain-base (1.34) maverick; urgency=low
+
+  * gcc-*-base is ARCH not all
+
+ -- Marcin Juszkiewicz <marcin.juszkiewicz@linaro.org>  Fri, 03 Sep 2010 16:22:32 +0200
+
+armel-cross-toolchain-base (1.33) maverick; urgency=low
+
+  * Version bump. 
+
+ -- Marcin Juszkiewicz <marcin.juszkiewicz@linaro.org>  Fri, 03 Sep 2010 12:39:55 +0200
+
+armel-cross-toolchain-base (1.32) maverick; urgency=low
+
+  * binary-arch builds only binutils - rest is binary-indep
+
+ -- Marcin Juszkiewicz <marcin.juszkiewicz@linaro.org>  Fri, 03 Sep 2010 10:38:31 +0200
+
+armel-cross-toolchain-base (1.31) maverick; urgency=low
+
+  * split $ARCH and arch:all packages work into separate steps
+  * marked as x86(-64) only
+
+ -- Marcin Juszkiewicz <marcin.juszkiewicz@linaro.org>  Thu, 02 Sep 2010 17:39:34 +0200
+
+armel-cross-toolchain-base (1.30) maverick; urgency=low
+
+  * Another change of binary targets
+
+ -- Marcin Juszkiewicz <marcin.juszkiewicz@linaro.org>  Thu, 02 Sep 2010 15:57:50 +0200
+
+armel-cross-toolchain-base (1.29) maverick; urgency=low
+
+  * Decided to go other way to give 'proper' source line in resulting
+    packages:
+    * repack all resulting debs to give them "proper" source line
+    * kill all sed hacks
+  * added DEB_VER_ACT which keeps ver of this package
+  * set me as maintainer
+  * added empty binary-arch
+
+ -- Marcin Juszkiewicz <marcin.juszkiewicz@linaro.org>  Thu, 02 Sep 2010 14:37:52 +0200
+
+armel-cross-toolchain-base (1.28) maverick; urgency=low
+
+  * eglibc: debian/control is generated - sed one more file
+  * fix rules dependencies
+
+ -- Marcin Juszkiewicz <marcin@juszkiewicz.com.pl>  Tue, 31 Aug 2010 18:20:46 +0200
+
+armel-cross-toolchain-base (1.27) maverick; urgency=low
+
+  * new var: DO_SED_HACKS to allow skipping sed hacks from 1.26
+
+ -- Marcin Juszkiewicz <marcin.juszkiewicz@linaro.org>  Tue, 31 Aug 2010 15:30:44 +0200
+
+armel-cross-toolchain-base (1.26) maverick; urgency=low
+
+  * hack components to have 'armhf-cross-toolchain-base' as Source in resulting packages
+
+ -- Marcin Juszkiewicz <marcin.juszkiewicz@linaro.org>  Tue, 31 Aug 2010 15:03:47 +0200
+
+armel-cross-toolchain-base (1.25) maverick; urgency=low
+
+  * use DEB_LIST to keep list of resulting packages
+
+ -- Marcin Juszkiewicz <marcin.juszkiewicz@linaro.org>  Tue, 31 Aug 2010 12:12:58 +0200
+
+armel-cross-toolchain-base (1.24) maverick; urgency=low
+
+  * Package gcc-*-base with stage2
+
+ -- Marcin Juszkiewicz <marcin.juszkiewicz@linaro.org>  Tue, 31 Aug 2010 10:59:15 +0200
+
+armel-cross-toolchain-base (1.23) maverick; urgency=low
+
+  * Added texi2html dependency - needed by eglibc.
+
+ -- Marcin Juszkiewicz <marcin@juszkiewicz.com.pl>  Mon, 30 Aug 2010 12:30:53 +0200
+
+armel-cross-toolchain-base (1.22) maverick; urgency=low
+
+  * Added target libraries to LD_LIBRARY_PATH for dpkg-shlibdeps
+  * Build gcc-*-base from gcc/stage2
+
+ -- Marcin Juszkiewicz <marcin.juszkiewicz@linaro.org>  Mon, 30 Aug 2010 11:42:53 +0200
+
+armel-cross-toolchain-base (1.21) maverick; urgency=low
+
+  * More build dependencies
+
+ -- Marcin Juszkiewicz <marcin.juszkiewicz@linaro.org>  Fri, 27 Aug 2010 16:28:16 +0200
+
+armel-cross-toolchain-base (1.20) maverick; urgency=low
+
+  * Use gcc 4.5 by default.
+
+ -- Marcin Juszkiewicz <marcin.juszkiewicz@linaro.org>  Fri, 27 Aug 2010 12:45:14 +0200
+
+armel-cross-toolchain-base (1.19) maverick; urgency=low
+
+  * Use plain Ubuntu packages and apply patches when needed. 
+
+ -- Marcin Juszkiewicz <marcin.juszkiewicz@linaro.org>  Thu, 26 Aug 2010 15:59:24 +0200
+
+armel-cross-toolchain-base (1.18) maverick; urgency=low
+
+  * Package libgcc1 in gcc/stage2
+
+ -- Marcin Juszkiewicz <marcin.juszkiewicz@linaro.org>  Thu, 26 Aug 2010 15:46:09 +0200
+
+armel-cross-toolchain-base (1.17) maverick; urgency=low
+
+  * Split to armhf-cross-toolchain-base (binutils, eglibc, linux-headers) and
+    armel-cross-toolchain (gcc/stage3).
+
+ -- Marcin Juszkiewicz <marcin.juszkiewicz@linaro.org>  Thu, 26 Aug 2010 11:58:33 +0200
+
+armel-cross-toolchain (1.16) maverick; urgency=low
+
+  * New code for generating debian/files from -armel-cross packages.
+  * Removed copying of linux/debian/{control,files} as we need only
+    linux-libc-dev which gets converted with dpkg-cross.
+
+ -- Marcin Juszkiewicz <marcin.juszkiewicz@linaro.org>  Mon, 23 Aug 2010 15:16:37 +0200
+
+armel-cross-toolchain (1.15) maverick; urgency=low
+
+  * Updated to versions with my changes applied. 
+
+ -- Marcin Juszkiewicz <marcin.juszkiewicz@linaro.org>  Mon, 23 Aug 2010 10:43:28 +0200
+
+armel-cross-toolchain (1.14) maverick; urgency=low
+
+  * Bumped gcc-4.4-source to newer patchset.
+
+ -- Marcin Juszkiewicz <marcin.juszkiewicz@linaro.org>  Wed, 11 Aug 2010 17:33:33 +0200
+
+armel-cross-toolchain (1.13) maverick; urgency=low
+
+  * Eglibc/stage2 tried to use Linux headers from /usr/arm-linux-gnueabi/
+
+ -- Marcin Juszkiewicz <marcin.juszkiewicz@linaro.org>  Tue, 10 Aug 2010 17:30:40 +0200
+
+armel-cross-toolchain (1.12) maverick; urgency=low
+
+  * Remove most of eglibc/localesdata from list of generated ones.
+
+ -- Marcin Juszkiewicz <marcin.juszkiewicz@linaro.org>  Tue, 10 Aug 2010 16:11:36 +0200
+
+armel-cross-toolchain (1.11) maverick; urgency=low
+
+  * Eglibc tried to use Linux headers from /usr/arm-linux-gnueabi/
+
+ -- Marcin Juszkiewicz <marcin.juszkiewicz@linaro.org>  Tue, 10 Aug 2010 13:29:33 +0200
+
+armel-cross-toolchain (1.10) maverick; urgency=low
+
+  * Fixed build-eglibc1 deps 
+
+ -- Marcin Juszkiewicz <marcin.juszkiewicz@linaro.org>  Tue, 10 Aug 2010 12:37:10 +0200
+
+armel-cross-toolchain (1.9) maverick; urgency=low
+
+  * Fixed build-eglibc1 patch problem.
+
+ -- Marcin Juszkiewicz <marcin.juszkiewicz@linaro.org>  Tue, 10 Aug 2010 12:35:10 +0200
+
+armel-cross-toolchain (1.8) maverick; urgency=low
+
+  * Made init-eglibc really stampless.
+  * Fixed build-eglibc1 arch problem.
+
+ -- Marcin Juszkiewicz <marcin.juszkiewicz@linaro.org>  Tue, 10 Aug 2010 11:05:10 +0200
+
+armel-cross-toolchain (1.7) maverick; urgency=low
+
+  * Added NO_PKG_MANGLE=1 as I build other source packages.
+  * init-eglibc is stampless as eglibc provides patched source
+
+ -- Marcin Juszkiewicz <marcin.juszkiewicz@linaro.org>  Sun, 08 Aug 2010 18:55:10 +0200
+
+armel-cross-toolchain (1.6) maverick; urgency=low
+
+  * Added build-depends from binutils, eglibc, gcc-4.4, linux.
+
+ -- Marcin Juszkiewicz <marcin.juszkiewicz@linaro.org>  Sun, 08 Aug 2010 18:15:50 +0200
+
+armel-cross-toolchain (1.5) maverick; urgency=low
+
+  * Few more fixes
+
+ -- Marcin Juszkiewicz <marcin.juszkiewicz@linaro.org>  Sun, 08 Aug 2010 17:17:56 +0200
+
+armel-cross-toolchain (1.4) maverick; urgency=low
+
+  * Create stamp dir...
+
+ -- Marcin Juszkiewicz <marcin.juszkiewicz@linaro.org>  Fri, 06 Aug 2010 16:56:57 +0200
+
+armel-cross-toolchain (1.3) maverick; urgency=low
+
+  * Introduced lot of variables which keep versions. Values are taken from
+    components changelog files.
+
+ -- Marcin Juszkiewicz <marcin.juszkiewicz@linaro.org>  Fri, 06 Aug 2010 16:56:57 +0200
+
+armel-cross-toolchain (1.2) maverick; urgency=low
+
+  * Fix build dependencies. 
+
+ -- Marcin Juszkiewicz <marcin.juszkiewicz@linaro.org>  Fri, 06 Aug 2010 12:31:43 +0200
+
+armel-cross-toolchain (1.1) maverick; urgency=low
+
+  * Fixed few lintian problems.
+
+ -- Marcin Juszkiewicz <marcin.juszkiewicz@linaro.org>  Fri, 06 Aug 2010 11:05:59 +0200
+
+armel-cross-toolchain (1.0) maverick; urgency=low
+
+  * Initial packaging
+
+ -- Marcin Juszkiewicz <marcin.juszkiewicz@linaro.org>  Thu, 05 Aug 2010 13:35:45 +0200

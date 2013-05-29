@@ -1,0 +1,7 @@
+hack-fix-link-problem.diff
+local-kill-locales.patch
+ubuntu-backport-patched-sources-support.patch
+use-gcc-for-native-compile.patch
+stage1-fix-libdir.patch
+dpkg-shlibs.patch
+configure-without-selinux.diff

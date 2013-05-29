@@ -1,0 +1,6 @@
+dpkg-shlibs.patch
+local-kill-locales.patch
+no-symlinks-for-no-multiarch.patch
+disable-selinux.patch
+stage1-passes.diff
+no-stack-protector.diff

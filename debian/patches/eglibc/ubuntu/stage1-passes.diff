@@ -1,0 +1,182 @@
+Only in eglibc-2.16/debian/rules.d: .build.mk.swp
+Index: eglibc-2.17/debian/rules.d/build.mk
+===================================================================
+--- eglibc-2.17.orig/debian/rules.d/build.mk
++++ eglibc-2.17/debian/rules.d/build.mk
+@@ -93,6 +93,7 @@
+ $(stamp)build_%: $(stamp)configure_%
+ 	@echo Building $(curpass)
+ 
++ifneq ($(DEB_STAGE),stage1)
+ ifeq ($(DEB_BUILD_PROFILE),bootstrap)
+ 	$(MAKE) cross-compiling=yes -C $(DEB_BUILDDIR) $(NJOBS) csu/subdir_lib
+ else
+@@ -120,10 +121,19 @@
+ 	  done ; \
+ 	fi
+ endif
++else # stage1
++	@## Build the crtX.o init routines
++	$(call logme, -a $(log_build), $(MAKE) -C $(DEB_BUILDDIR) $(NJOBS) csu/subdir_lib)
++	$(call logme, -a $(log_build), $(AR) qcs $(DEB_BUILDDIR)/libfake.a)
++	$(call logme, -a $(log_build), $(CC) -nostdlib -nostartfiles -shared \
++				-o $(DEB_BUILDDIR)/libfake.so $(DEB_BUILDDIR)/libfake.a)
++	$(call logme, -a $(log_build), echo "---------------" ; echo -n "Build ended: " ; date --rfc-2822)
++endif # stage1
+ 	touch $@
+ 
+ $(patsubst %,check_%,$(EGLIBC_PASSES)) :: check_% : $(stamp)check_%
+ $(stamp)check_%: $(stamp)build_%
++ifneq ($(DEB_STAGE),stage1)
+ 	@set -e ; \
+ 	if [ -n "$(findstring nocheck,$(DEB_BUILD_OPTIONS))" ]; then \
+ 	  echo "Tests have been disabled via DEB_BUILD_OPTIONS." | tee $(log_results) ; \
+@@ -156,11 +166,15 @@
+ 	  echo "TEST SUMMARY $(log_test) ($$n matching lines)"; \
+ 	  grep '^make.* Error' $(log_test) || true; \
+ 	  echo "END TEST SUMMARY $(log_test)"
++else # stage1
++	@echo Nothing to test for $(curpass)
++endif # stage1
+ 	touch $@
+ 
+ $(patsubst %,install_%,$(EGLIBC_PASSES)) :: install_% : $(stamp)install_%
+ $(stamp)install_%: $(stamp)check_%
+ 	@echo Installing $(curpass)
++ifneq ($(DEB_STAGE),stage1)
+ 	rm -rf $(CURDIR)/debian/tmp-$(curpass)
+ ifeq ($(DEB_BUILD_PROFILE),bootstrap)
+ 	$(call logme, -a $(log_build), $(MAKE) -C $(DEB_BUILDDIR) $(NJOBS)	\
+@@ -278,6 +292,40 @@
+ 
+ 	$(call xx,extra_install)
+ endif
++else # stage1
++	@echo Installing $(curpass)
++	rm -rf $(CURDIR)/debian/tmp-$(curpass)
++	## These libc/ld-linux binaries are total garbage, but they allow
++	## a subsequent stage2 GCC build to succeed.
++	install -d $(CURDIR)/debian/tmp-$(curpass)/$(call xx,libdir)
++	for lib_a in $(stage1_libfake.a); do \
++		install -T $(DEB_BUILDDIR)/libfake.a $(CURDIR)/debian/tmp-$(curpass)/$(call xx,libdir)/$$lib_a; \
++	done
++	for lib_so in $(stage1_libfake.so); do \
++		install -T $(DEB_BUILDDIR)/libfake.so $(CURDIR)/debian/tmp-$(curpass)/$(call xx,libdir)/$$lib_so; \
++	done
++	$(MAKE) -C $(DEB_BUILDDIR) install_root=$(CURDIR)/debian/tmp-$(curpass) csu/subdir_install
++	if [ $(curpass) = libc ]; then \
++	  $(MAKE) -C $(DEB_BUILDDIR) install_root=$(CURDIR)/debian/tmp-$(curpass) install-bootstrap-headers=yes \
++		install-headers; \
++	fi
++	if [ $(curpass) = libc ]; then \
++	  mkdir -p debian/tmp-$(curpass)/usr/include/$(DEB_HOST_MULTIARCH); \
++	  mv debian/tmp-$(curpass)/usr/include/bits debian/tmp-$(curpass)/usr/include/$(DEB_HOST_MULTIARCH); \
++	  mv debian/tmp-$(curpass)/usr/include/gnu debian/tmp-$(curpass)/usr/include/$(DEB_HOST_MULTIARCH); \
++	  mv debian/tmp-$(curpass)/usr/include/sys debian/tmp-$(curpass)/usr/include/$(DEB_HOST_MULTIARCH); \
++	  mv debian/tmp-$(curpass)/usr/include/fpu_control.h debian/tmp-$(curpass)/usr/include/$(DEB_HOST_MULTIARCH); \
++	  mv debian/tmp-$(curpass)/usr/include/a.out.h debian/tmp-$(curpass)/usr/include/$(DEB_HOST_MULTIARCH); \
++	  mv debian/tmp-$(curpass)/usr/include/ieee754.h debian/tmp-$(curpass)/usr/include/$(DEB_HOST_MULTIARCH); \
++	fi
++	# referenced in extra_pkg_install, existance is good enough
++	if [ $(curpass) != libc ]; then \
++	  mkdir -p debian/tmp-$(curpass)/usr/include/gnu; \
++	  for i in 32 64 x32 hard soft; do \
++	    touch debian/tmp-$(curpass)/usr/include/gnu/stubs-$$i.h; \
++	  done; \
++	fi
++endif # stage1
+ 	touch $@
+ 
+ $(stamp)doc: $(stamp)patch
+Index: eglibc-2.17/debian/rules.d/debhelper.mk
+===================================================================
+--- eglibc-2.17.orig/debian/rules.d/debhelper.mk
++++ eglibc-2.17/debian/rules.d/debhelper.mk
+@@ -199,6 +199,14 @@
+ 	templates="libc-dev" ;\
+ 	pass="" ; \
+ 	suffix="" ;\
++	case "$$curpass:$$slibdir" in \
++	  libc:*) \
++	    ;; \
++	  *:/lib32 | *:/lib64 | *:/libx32 | *:/lib/arm-linux-gnueabi*) \
++	    pass="-alt" \
++	    suffix="-$(curpass)" \
++	    ;; \
++	esac ; \
+ 	for t in $$templates ; do \
+ 	  for s in debian/$$t$$pass.* ; do \
+ 	    t=`echo $$s | sed -e "s#libc\(.*\)$$pass#$(libc)\1$$suffix#"` ; \
+@@ -208,12 +216,12 @@
+ 	    sed -e "s#TMPDIR#debian/tmp-$$curpass#g" -i $$t; \
+ 	    sed -e "s#RTLDDIR#$$rtlddir#g" -i $$t; \
+ 	    sed -e "s#SLIBDIR#$$slibdir#g" -i $$t; \
++	    sed -e "s#LIBDIR#$$libdir#g" -i $$t; \
+ 	  done ; \
+ 	done
+ 
+ 	egrep -v "LIBDIR.*.a " debian/$(libc)-dev.install >debian/$(libc)-dev.install-
+ 	mv debian/$(libc)-dev.install- debian/$(libc)-dev.install
+-	sed -e "s#LIBDIR#lib#g" -i debian/$(libc)-dev.install
+ else
+ $(patsubst %,debhelper_%,$(EGLIBC_PASSES)) :: debhelper_% : $(stamp)debhelper_%
+ $(stamp)debhelper_%: $(stamp)debhelper-common $(stamp)install_%
+Index: eglibc-2.17/debian/rules.d/stage1.mk
+===================================================================
+--- eglibc-2.17.orig/debian/rules.d/stage1.mk
++++ eglibc-2.17/debian/rules.d/stage1.mk
+@@ -2,8 +2,8 @@
+ 
+ ifeq ($(DEB_STAGE),stage1)
+ 
+-override EGLIBC_PASSES = libc
+-override DEB_ARCH_REGULAR_PACKAGES = $(libc)-dev
++#override EGLIBC_PASSES = libc
++override DEB_ARCH_REGULAR_PACKAGES := $(foreach p,$(DEB_ARCH_REGULAR_PACKAGES),$(if $(findstring -dev,$(p)),$(if $(findstring -bin,$(p)),,$(p))))
+ override DEB_INDEP_REGULAR_PACKAGES =
+ override DEB_UDEB_PACKAGES =
+ 
+@@ -31,43 +31,4 @@
+ 	librt.a			\
+ 	libutil.a		\
+ 
+-$(stamp)build_libc: $(stamp)configure_libc
+-	@echo Building $(curpass)
+-	@## Build the crtX.o init routines
+-	$(call logme, -a $(log_build), $(MAKE) -C $(DEB_BUILDDIR) $(NJOBS) csu/subdir_lib)
+-	$(call logme, -a $(log_build), $(AR) qcs $(DEB_BUILDDIR)/libfake.a)
+-	$(call logme, -a $(log_build), $(CC) -nostdlib -nostartfiles -shared \
+-				-o $(DEB_BUILDDIR)/libfake.so $(DEB_BUILDDIR)/libfake.a)
+-	$(call logme, -a $(log_build), echo "---------------" ; echo -n "Build ended: " ; date --rfc-2822)
+-	touch $@
+-
+-$(stamp)check_libc: $(stamp)build_libc
+-	@echo Nothing to test for $(curpass)
+-	touch $@
+-
+-$(stamp)install_libc: DESTDIR=$(CURDIR)/debian/tmp-$(curpass)
+-$(stamp)install_libc: $(stamp)check_libc
+-	@echo Installing $(curpass)
+-	rm -rf $(CURDIR)/debian/tmp-$(curpass)
+-	## These libc/ld-linux binaries are total garbage, but they allow
+-	## a subsequent stage2 GCC build to succeed.
+-	install -d $(DESTDIR)/usr/lib/$(DEB_HOST_MULTIARCH)
+-	for lib_a in $(stage1_libfake.a); do \
+-		install -T $(DEB_BUILDDIR)/libfake.a $(DESTDIR)/usr/lib/$(DEB_HOST_MULTIARCH)/$$lib_a; \
+-	done
+-	for lib_so in $(stage1_libfake.so); do \
+-		install -T $(DEB_BUILDDIR)/libfake.so $(DESTDIR)/usr/lib/$(DEB_HOST_MULTIARCH)/$$lib_so; \
+-	done
+-	$(MAKE) -C $(DEB_BUILDDIR) install_root=$(DESTDIR) install-bootstrap-headers=yes \
+-		csu/subdir_install install-headers
+-	mkdir -p $(DESTDIR)/usr/include/$(DEB_HOST_MULTIARCH)
+-	mv $(DESTDIR)/usr/include/bits          $(DESTDIR)/usr/include/$(DEB_HOST_MULTIARCH)
+-	mv $(DESTDIR)/usr/include/gnu           $(DESTDIR)/usr/include/$(DEB_HOST_MULTIARCH)
+-	mv $(DESTDIR)/usr/include/sys           $(DESTDIR)/usr/include/$(DEB_HOST_MULTIARCH)
+-	mv $(DESTDIR)/usr/include/fpu_control.h $(DESTDIR)/usr/include/$(DEB_HOST_MULTIARCH)
+-	mv $(DESTDIR)/usr/include/a.out.h	$(DESTDIR)/usr/include/$(DEB_HOST_MULTIARCH)
+-	mv $(DESTDIR)/usr/include/ieee754.h	$(DESTDIR)/usr/include/$(DEB_HOST_MULTIARCH)
+-	$(call xx,extra_install)
+-	touch $@
+-
+ endif

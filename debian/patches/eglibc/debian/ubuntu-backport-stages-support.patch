@@ -1,0 +1,49 @@
+From 00cd7debc55a63e23fe0f4f7967525bee8995e17 Mon Sep 17 00:00:00 2001
+From: Marcin Juszkiewicz <marcin@juszkiewicz.com.pl>
+Date: Thu, 3 Feb 2011 15:45:05 +0100
+Subject: [PATCH 2/2] 51
+
+---
+ debian/rules                |   28 ++++++++++++++++++++--------
+ debian/rules.d/build.mk     |   24 ++++++++++++++++++++++++
+ debian/rules.d/debhelper.mk |   27 ++++++++++++++++++++++++++-
+ 3 files changed, 70 insertions(+), 9 deletions(-)
+
+Index: eglibc-2.17/debian/rules
+===================================================================
+--- eglibc-2.17.orig/debian/rules	2013-05-27 16:05:53.541852075 +0000
++++ eglibc-2.17/debian/rules	2013-05-27 16:05:53.537852075 +0000
+@@ -212,14 +212,18 @@
+ 		debian/*.preinst.* debian/locales.bug-presubj
+ 
+ # Required Debian targets
++ifdef DEB_STAGE
++build-arch: $(stamp)info \
++	$(patsubst %,$(stamp)build_%,$(EGLIBC_PASSES))
++build: build-arch
++else
+ build-arch: $(stamp)info \
+ 	$(patsubst %,$(stamp)build_%,$(EGLIBC_PASSES)) \
+ 	$(patsubst %,$(stamp)check_%,$(EGLIBC_PASSES))
+-
+-build-indep: $(stamp)source $(stamp)doc
+-
+ build: build-arch build-indep
++endif
+ 
++build-indep: $(stamp)source $(stamp)doc
+ 
+ binary-indep: build-indep testroot debian/control $(build-tree) \
+ 	$(patsubst %,$(stamp)binaryinst_%,$(DEB_INDEP_REGULAR_PACKAGES))
+Index: eglibc-2.17/debian/rules.d/debhelper.mk
+===================================================================
+--- eglibc-2.17.orig/debian/rules.d/debhelper.mk	2013-05-27 16:05:53.541852075 +0000
++++ eglibc-2.17/debian/rules.d/debhelper.mk	2013-05-27 16:05:53.537852075 +0000
+@@ -256,6 +256,7 @@
+ 	done
+ endif
+ 
++endif
+ 	touch $@
+ 
+ clean::

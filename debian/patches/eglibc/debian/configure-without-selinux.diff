@@ -1,0 +1,24 @@
+Index: eglibc-2.17/debian/sysdeps/armel.mk
+===================================================================
+--- eglibc-2.17.orig/debian/sysdeps/armel.mk	2013-05-28 17:44:56.593836380 +0000
++++ eglibc-2.17/debian/sysdeps/armel.mk	2013-05-28 17:49:16.229846254 +0000
+@@ -1,5 +1,7 @@
+ libc_add-ons = ports nptl $(add-ons)
+ 
++extra_config_options = --without-selinux
++
+ #EGLIBC_PASSES += armhf
+ #DEB_ARCH_REGULAR_PACKAGES += libc6-armhf libc6-dev-armhf
+ #armhf_add-ons = ports nptl $(add-ons)
+Index: eglibc-2.17/debian/sysdeps/armhf.mk
+===================================================================
+--- eglibc-2.17.orig/debian/sysdeps/armhf.mk	2013-05-28 17:44:56.589836380 +0000
++++ eglibc-2.17/debian/sysdeps/armhf.mk	2013-05-28 17:49:10.037846018 +0000
+@@ -1,5 +1,7 @@
+ libc_add-ons = ports nptl $(add-ons)
+ 
++extra_config_options = --without-selinux
++
+ # Install a compat symlink so old binaries keep working:
+ define libc6_extra_pkg_install
+ mkdir -p debian/libc6/lib/arm-linux-gnueabihf
